@@ -1,7 +1,6 @@
+<script setup></script>
 <template>
-    <div>
-        <h1>
-            Hello from home screen
-        </h1>
-    </div>
+    <Head :title="` | ${$page.component}`" />
+    <h1>Hello {{ $page.props.auth.user }}</h1>
+    <h1>{{ $page }}</h1>
 </template>
