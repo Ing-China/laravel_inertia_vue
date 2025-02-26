@@ -8,69 +8,36 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function register(Request $request)
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-       $fields= $request->validate([
-            'name'=>['required','max:255'],
-            'email'=>['required','email','max:255','unique:users'],
-            'password'=>['required','confirmed']
+        $fields = $request->validate([
+            'name' => ['required', 'max:255'],
+            'email' => ['required', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'confirmed']
         ]);
 
-        $user=User::create($fields);
+        $user = User::create($fields);
 
         Auth::login($user);
 
         return redirect()->route('home');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function login(Request $request)
     {
-        //
-    }
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+        if (Auth::attempt($credentials, $credentials->remember)) {
+            $request->session()->regenerate();
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+            return redirect()->intended('/');
+        }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ])->onlyInput('email');
     }
 }
