@@ -7,7 +7,14 @@ const form = useForm({
     email: null,
     password: null,
     password_confirmation: null,
+    image: null,
+    preview: null,
 });
+
+const change = (event) => {
+    form.image = event.target.files[0];
+    form.preview = URL.createObjectURL(event.target.files[0]);
+};
 
 const submit = () => {
     form.post("/register", {
@@ -23,6 +30,25 @@ const submit = () => {
 
     <div class="w-2/4 mx-auto">
         <form @submit.prevent="submit">
+            <div class="grid place-items-center">
+                <div
+                    class="relative w-28 h-28 rounded-full overflow-hidden border border-slate-300"
+                >
+                    <label
+                        for="image"
+                        class="absolute inset-0 grid content-end cursor-pointer"
+                    >
+                        <span class="bg-white/70 pb-2 text-center">Image</span>
+                    </label>
+                    <input type="file" id="image" @input="change" hidden />
+                    <img
+                        class="object-cover w-28 h-28"
+                        :src="form.preview ?? 'storage/images/default.jpg'"
+                    />
+                </div>
+                <p class="error mt-2">{{ form.errors.image }}</p>
+            </div>
+
             <TextInput
                 name="Name"
                 v-model="form.name"
@@ -57,7 +83,7 @@ const submit = () => {
                 </p>
             </div>
             <button class="primary-btn" :disabled="form.processing">
-                Login
+                Register
             </button>
         </form>
     </div>

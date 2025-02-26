@@ -52,7 +52,7 @@ const submit = () => {
             </div>
 
             <button class="primary-btn" :disabled="form.processing">
-                Register
+                Login
             </button>
         </form>
     </div>
