@@ -1,5 +1,6 @@
 <script setup>
 import { useForm } from '@inertiajs/vue3';
+import TextInput from "../Components/TextIput.vue"
 
     const form = useForm({
         name:null,
